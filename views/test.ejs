@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>My Page</title>
+  <!-- Include the Tailwind CSS stylesheet -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Add some custom styles for the tabbed interface -->
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.57.0/lib/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.57.0/theme/monokai.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.5/dist/tailwind.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/codemirror@5.57.0/lib/codemirror.min.js"></script>
+</head>
+<body class="h-full bg-gray-900">
+  <!-- Create the tabbed interface -->
+  <input type="radio" name="tabs" id="tab-1" checked>
+  <label for="tab-1" onclick="showTab(1)">Main</label>
+  <input type="radio" name="tabs" id="tab-2">
+  <label for="tab-2" onclick="showTab(2)">Create</label>
+  <input type="radio" name="tabs" id="tab-3">
+  <label for="tab-3" onclick="showTab(3)">Settings</label>
+  <button class="fixed top-0 right-0 mt-1 mr-2 p-2 bg-gray-500 text-white rounded-full mb-2" onclick="window.location.href = '/logout'">Logout</button>
+  <!-- Create the tab content -->
+  <div class="tab-content p-4 bg-gray-800">
+    <div id="content-1">
+      <!-- Content for tab 2 goes here -->
+      <h1 class="text-white">Past Projects</h1>
+    </div>
+    <div class="compiler" id="content-2" style="display: none;">
+        <div class="flex h-full">
+            <div class="leftTab w-1/2 h-full">
+                <div class="tabs">
+                    <div class="flex">
+                        <div class="editTab w-1/2 mr-2 py-2 bg-gray-400 text-white" onclick="switchEditor('editor1')">Editor 1</div>
+                        <div class="editTab w-1/2 ml-2 py-2 bg-gray-600 text-white" onclick="switchEditor('editor2')">Editor 2</div>
+                    </div>
+                </div>
+                <br>
+                <div class="editors h-full">
+                    <div class="editor h-full" id="editor1">
+                        <div class="h-full" id="editor1-content"></div>
+                    </div>
+                    <div class="editor h-full" id="editor2">
+                        <div  class="h-full" id="editor2-content"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="rightTab w-1/2 bg-gray-900 ml-2">
+                <h1 class="text-white text-center">Character Counter:</h1>
+                <h1 id="whiteText" class="text-blue-600 text-center">0</h1>
+            </div>
+        </div>
+        <div class="flex">
+            <button id="compile-button"  class="bg-green-500 w-1/2 h-12 text-white font-bold py-2 px-4 rounded">
+              Compile
+            </button>
+            <button class="bg-red-500 w-1/2 h-12 text-white font-bold py-2 px-4 rounded ml-2">
+              Save
+            </button>
+        </div>
+    </div>
+    <div id="content-3" style="display: none;">
+      <!-- Content for tab 3 goes here -->
+      <h1 class="text-white">Settings</h1>
+    </div>
+  </div>
+  <!-- Add a JavaScript function to show the tab content -->
+  <script>
+    var editor = CodeMirror(document.getElementById("editor1-content"), {
+        lineNumbers: true,
+        mode: "javascript",
+        theme: "monokai",
+        lineWrapping: true,
+        indentUnit: 4,
+        height: "100%"
+    });
+
+    var editor1 = CodeMirror(document.getElementById("editor2-content"), {
+        lineNumbers: true,
+        mode: "javascript",
+        theme: "monokai",
+        lineWrapping: true,
+        indentUnit: 4,
+        height: "100%"
+    });
+    
+    const editorTabs = document.querySelectorAll('.editTab');
+
+    for (const tab of editorTabs) {
+        tab.addEventListener('click', function() {
+            for (const otherTab of editorTabs) {
+                otherTab.classList.remove('bg-gray-400');
+                otherTab.classList.add('bg-gray-600');
+            }
+            this.classList.remove('bg-gray-600');
+            this.classList.add('bg-gray-400');
+        });
+    }
+
+    var compile = document.getElementById("compile-button");
+    compile.addEventListener("click", function() {
+    // Get the text from the codemirror textarea
+        const code = editor.getValue();
+        const code1 = editor1.getValue();
+        // Make a request to the server to run the Python script
+        fetch('/runHwc', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ code, code1 })
+        
+        })
+        .then(res => res.text())
+        .then(data => {
+            console.log(data);
+            updateCount(JSON.parse(data));
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    });
+    
+    function showTab(index) {
+        // Get the tab content elements
+        var tab1 = document.getElementById("content-1");
+        var tab2 = document.getElementById("content-2");
+        var tab3 = document.getElementById("content-3");
+        // Get the tab input elements
+        var input1 = document.getElementById("tab-1");
+        var input2 = document.getElementById("tab-2");
+        var input3 = document.getElementById("tab-3");
+        // Hide all tab content elements
+        tab1.style.display = "none";
+        tab2.style.display = "none";
+        tab3.style.display = "none";
+        // Show the selected tab content element
+        if (index == 1) {
+            tab1.style.display = "block";
+            input1.checked = true;
+        } else if (index == 2) {
+            tab2.style.display = "block";
+            input2.checked = true;
+        } else if (index == 3) {
+            tab3.style.display = "block";
+            input3.checked = true;
+        }
+    }
+
+    function switchEditor(id) {
+        var editors = document.querySelectorAll('.editor');
+        for (var i = 0; i < editors.length; i++) {
+            editors[i].style.display = 'none';
+        }
+        document.querySelector('#' + id).style.display = 'block';
+    }
+
+    function updateCount(item) {
+        console.log("IN HERE");
+        let whiteText = document.getElementById("whiteText");
+        let characterCount = item.result;
+        whiteText.innerHTML = characterCount;
+    }
+
+            // Get a reference to the add button and form
+    let addButton = document.getElementById('add-button');
+    let contactForm = document.getElementById('members');
+    let member = 2;
+    // Add an event listener to the add button
+    addButton.addEventListener('click', function() {
+        // Create a new form row with input fields for name and phone
+
+        let newRow = document.createElement('div');
+        newRow.classList.add('form-row', 'flex', 'flex-wrap', 'mb-4');
+        newRow.innerHTML = `
+        <div class="w-full">
+            <h1 class="text-center mb-2 mx-auto"> Member </h1>
+            </div>
+            <div class="w-full divide-y-4 border-none flex align-items-center py-2">
+            <label for="name" class="block font-bold px-2">Name:</label>
+            <input type="text" id="name" name="name" class="nameInput block w-full rounded-lg shadow-md p-2 bg-gray-700 border-none">
+            </div>
+            <div class="w-full divide-y-4 border-none flex align-items-center py-2">
+            <label for="phone" class="block font-bold px-2">Phone:</label>
+            <input type="text" id="phone" name="phone" class="phoneInput block w-full rounded-lg shadow-md p-2 bg-gray-700 border-none">
+            </div>
+            <div class="del-container">
+                <button type="button" class="btn w-1/3 mx-auto bg-red-500 rounded-lg shadow-md delete-button border-none">Delete</button>
+            </div>
+            <hr class="block w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700">
+        </div>
+        `;
+        contactForm.appendChild(newRow);
+        // Add the new form row to the form
+        member++;
+    });
+
+    // Add an event listener to the delete buttons
+    contactForm.addEventListener('click', function(event) {
+        if (event.target.classList.contains('delete-button')) {
+        // Remove the parent form row when the delete button is clicked
+        members--;
+        event.target.parentNode.parentNode.remove();
+        }
+    });
+
+    let submitBtn = document.querySelector("#submit-button");
+    let sessionName = document.querySelector("#sessionName");
+    submitBtn.addEventListener('click', function(event) {
+        let allNames = document.querySelectorAll(".nameInput");
+        let allPhones = document.querySelectorAll(".phoneInput");
+        
+        let nameArray = [];
+        let phoneArray = [];
+        for (var x = 0; x < allNames.length; x++) {
+          console.log("NAME:" + allNames[x].value + " - Phone:" + allPhones[x].value);
+          nameArray.push(allNames[x].value);
+          phoneArray.push(allPhones[x].value);
+        }
+        console.log(nameArray);
+
+        const data = {
+            names: nameArray,
+            phones: phoneArray,
+            gameName: sessionName.value
+        };
+
+        fetch('http://localhost:3000/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+        })
+    });
+  </script>
+</body>
+</html>

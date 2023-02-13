@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>User Registration</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.4/dist/tailwind.min.css" rel="stylesheet">
+  </head>
+  <body class="bg-gray-200 p-8">
+    <h1 class="text-3xl font-bold mb-4">User Registration</h1>
+
+    <!-- Registration form -->
+    <form action="/register" method="post" class="bg-white p-6 rounded-lg shadow-lg">
+      <div class="mb-4">
+        <label for="username" class="block text-gray-700 font-bold mb-2">Username:</label>
+        <input type="text" name="username" required class="border border-gray-400 p-2 w-full">
+      </div>
+      <div class="mb-4">
+        <label for="password" class="block text-gray-700 font-bold mb-2">Password:</label>
+        <input type="password" name="password" required class="border border-gray-400 p-2 w-full">
+      </div>
+      <input type="submit" value="Register" class="bg-indigo-500 text-white font-bold p-2 rounded">
+    </form>
+
+    <h1 class="text-3xl font-bold mt-8 mb-4">User Login</h1>
+
+    <!-- Login form -->
+    <form action="/login" method="post" class="bg-white p-6 rounded-lg shadow-lg">
+      <div class="mb-4">
+        <label for="username" class="block text-gray-700 font-bold mb-2">Username:</label>
+        <input type="text" name="username" required class="border border-gray-400 p-2 w-full">
+      </div>
+      <div class="mb-4">
+        <label for="password" class="block text-gray-700 font-bold mb-2">Password:</label>
+        <input type="password" name="password" required class="border border-gray-400 p-2 w-full">
+      </div>
+      <input type="submit" value="Login" class="bg-indigo-500 text-white font-bold p-2 rounded">
+    </form>
+  </body>
+</html>

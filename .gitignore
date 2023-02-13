@@ -1,0 +1,51 @@
+# Logs
+logs
+*.log
+
+# Dependency directories
+node_modules/
+
+# Local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Production env file
+.env.production
+
+# Coverage directory used by tools like `nyc`
+.nyc_output
+
+# npm debug logs
+npm-debug.log*
+
+# yarn debug logs
+yarn-debug.log*
+yarn-error.log*
+
+# IDEs and editors
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Databases
+*.db
+*.sqlite
+
+# Test artifacts
+.nyc_output
+
+# Jest's cache
+.jest
+
+# TernJS
+.tern-project
+
+.tests
+
+config.js

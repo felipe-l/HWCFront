@@ -1,0 +1,71 @@
+html {
+  height: 100%;
+}
+
+input[type="radio"] {
+    display: none;
+  }
+
+label {
+  display: inline-block;
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  margin-right: 10px;
+  color: white;
+}
+
+.del-container {
+  width:100%;
+  border: none;
+  text-align:center;
+}
+
+.tab-content {
+  border: 1px solid #ccc;
+  padding: 20px;
+}
+
+.logout-button {
+  @apply fixed top-0 right-0 mt-2 mr-2 p-2 bg-gray-500 text-white rounded-full;
+}
+
+.CodeMirror {
+  height: 90% !important;
+}
+
+.tab-content {
+  height: 80% !important;
+}
+
+.CodeMirror-line {
+  padding-left:30px !important;
+}
+
+.editTabs {
+  display: flex;
+}
+
+.editTab {
+  padding: 10px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.editor {
+  display: none;
+}
+
+#editor1 {
+  display: block;
+}
+
+.compiler {
+  height: 90%;
+}
+
+#graph-result {
+  display: block;
+  margin: auto;
+  width: 80%;
+}
